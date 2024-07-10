@@ -2,13 +2,22 @@ import { useState } from "react";
 import InputDefault from "../components/InputDefault";
 import ButtonDefault from "../components/ButtonDefault";
 import TaskType from "../types/taskType";
-import RadioDefault from "../components/RadioDefault";
+import Modal from "../components/Modal";
 
 function Home() {
   const [name, setName] = useState<string>("");
   const [task, setTask] = useState<string>("");
   const [status, setStatus] = useState<string>("progress");
   const [list, setList] = useState<TaskType[]>([]);
+  const [modal, setModal] = useState<boolean>(false)
+
+  function setStatusModal(){
+    setStatus(status)
+  }
+
+  function showModal(){
+    setModal(!modal)
+  }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -42,29 +51,14 @@ function Home() {
         />
 
         <InputDefault action={setTask} key="task" label="Tarefa" value={task} />
-
-        <RadioDefault
-          action={setStatus}
-          key="progress"
-          label="Andamento"
-          value="progress"
-          checked={status}
-        />
-        <RadioDefault
-          action={setStatus}
-          key="finished"
-          label="Finalizado"
-          value="finished"
-          checked={status}
-        />
-
         <ButtonDefault label="Enviar" type="submit" />
 
         {list.map((item) => (
           <div>
-            <a href="">{item.name}</a>
+            <a onClick={showModal} >{item.name}</a>
             <p>{item.task}</p>
             <p>{item.status}</p>
+            {modal && <Modal item={item} action={setStatusModal}/>}
           </div>
         ))}
       </form>
